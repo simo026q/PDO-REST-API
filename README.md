@@ -60,12 +60,88 @@ $database->disconnect();
 echo $response->json();
 ```
 
-### Response
-A JSON response looks like this:
+## Response
+### Constructor
+#### No parameter
+```
+// content: null
+// message: 
+// status: 200
+$rsp = new Response();
+```
+
+#### Status parameter
+```
+// content: null
+// message: 
+// status: 404
+$rsp = new Response(404);
+```
+
+#### Status parameter
+```
+// content: null
+// message: Table does not exist!
+// status: 404
+$rsp = new Response(404, "Table does not exist!");
+```
+
+#### Content parameter
+```
+// content: [ ... ]
+// message: OK
+// status: 200
+$rsp = new Response(200, "OK", array( ... ));
+```
+
+### Functions
+#### Raw
+##### Usage
+```
+$rsp = new Response(200, "Returned 4 rows", array( ... ));
+
+var_dump($rsp->raw());
+```
+##### Result
+```
+array(3) { 
+  ["content"] => array(4) { ... }
+  ["message"] => string(15) "Returned 4 rows" 
+  ["status"] => int(200) 
+}
+```
+#### JSON
+##### Usage
+```
+header('Content-Type: application/json; charset=UTF-8');
+
+$rsp = new Response(200, "Returned 4 rows", array( ... ));
+
+echo $rsp->json();
+```
+##### Result
 ```
 {
   "content": [ ... ], // 4 items
   "message": "Returned 4 rows",
   "status": 200
 }
+```
+
+## Error
+### Functions
+#### Throw
+```
+Error::throw(404, "Some error");
+```
+
+#### Throw code (e.g. e404())
+```
+Error::e404("Custom message");
+Error::e400();
+```
+
+#### Get message
+```
+$messsage = Error::getMessage(404); // Return "Not found"
 ```
