@@ -1,6 +1,3 @@
-# PDO REST API
-Open PDO REST API
-
 # Docs
 
 ## Step 1
