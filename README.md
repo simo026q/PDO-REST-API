@@ -43,7 +43,7 @@ $password = "";
 $dbname = "webshop";
 
 // Select table
-$table = "customers"
+$table = "customers";
 
 // Create a new database object
 $database = new Database($host, $user, $password, $dbname);
