@@ -38,14 +38,15 @@ header('Content-Type: application/json; charset=UTF-8');
 $host = "localhost";
 $user = "root";
 $password = "";
+
 // Change to your database name
-$database = "webshop";
+$dbname = "webshop";
 
 // Select table
 $table = "customers"
 
 // Create a new database object
-$database = new Database($host, $user, $password, $database);
+$database = new Database($host, $user, $password, $dbname);
 
 // Execute database query
 $response = $database->query("SELECT * FROM $table");
