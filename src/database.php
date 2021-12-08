@@ -3,6 +3,7 @@
 namespace simo026q\Database;
 
 use simo026q\Response\Response;
+use simo026q\Response\Error;
 
 /**
  * @author simo026q
@@ -12,6 +13,20 @@ use simo026q\Response\Response;
 class Database
 {
     private $host, $database, $username, $password, $connection, $port;
+
+    // https://www.php.net/manual/en/pdo.drivers.php
+    // ONLY MYSQL SUPPORT CURRENTLY
+    public const PDO_CUBRID = 0, 
+        PDO_DBLIB = 1, 
+        PDO_FIREBIRD = 2, 
+        PDO_IBM = 3, 
+        PDO_INFORMIX = 4, 
+        PDO_MYSQL = 5, 
+        PDO_OCI = 6, 
+        PDO_ODBC = 7, 
+        PDO_PGSQL = 8, 
+        PDO_SQLITE = 9, 
+        PDO_SQLSRV = 10;
 
     /**
      * @param string $host
@@ -55,16 +70,18 @@ class Database
     /**
      * @return bool If the connection is open
      */
-    function isConnected() {
+    function isConnected()
+    {
         return ($this->connection != null);
     }
 
     /**
      * Execute query
      * @param string $query Query string
+     * @param bool $convertType Convert column values
      * @return Response Response object
      */
-    function query($query)
+    function query($query, $convertType = true)
     {
         try {
             $stmt = $this->connection->prepare($query);
@@ -73,10 +90,13 @@ class Database
             $content = array();
 
             if ($stmt->rowCount() > 0) {
+
                 // Get all column types
-                foreach (range(0, $stmt->columnCount() - 1) as $column_index) {
-                    $rowMeta = $stmt->getColumnMeta($column_index);
-                    $meta[$rowMeta["name"]] = $rowMeta["native_type"];
+                if ($convertType) {
+                    foreach (range(0, $stmt->columnCount() - 1) as $column_index) {
+                        $rowMeta = $stmt->getColumnMeta($column_index);
+                        $meta[$rowMeta["name"]] = $rowMeta["native_type"];
+                    }
                 }
 
                 // Get all data
@@ -84,8 +104,8 @@ class Database
                     $rowData = array();
                     foreach ($row as $key => $val) {
                         if ($key != "disabled") {
-                            // Convert to the correct type
-                            if (isset($meta[$key])) {
+                            // Convert to the correct type ($convertType if true)
+                            if (isset($meta[$key]) && $convertType) {
                                 $rowData[$key] = self::getPdoValue($val, $meta[$key]);
                             } else {
                                 $rowData[$key] = $val;
@@ -94,6 +114,7 @@ class Database
                     }
                     array_push($content, $rowData);
                 }
+
                 $status = 200;
                 $message = "Returned " . count($content) . " rows";
             } else {
@@ -103,7 +124,8 @@ class Database
 
             return new Response($status, $message, $content);
         } catch (\PDOException $err) {
-            return new Response(500);
+            error_log($err->getMessage());
+            return Error::get(500);
         }
     }
 
@@ -119,7 +141,8 @@ class Database
      * Convert the $value to the correct php type
      * @param string $type
      */
-    private static function getPdoValue($value, $type) {
+    private static function getPdoValue($value, $type)
+    {
         switch ($type) {
             case "LONG":
                 $returnVal = (int)$value;

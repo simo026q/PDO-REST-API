@@ -46,13 +46,22 @@ class Response
 
 class Error extends Response {
     /**
+     * Return en error
+     * @param int $status
+     * @param string $message
+     */
+    static function get($status, $message = "") {
+        if (empty($message)) $message = self::getMessage($status);
+        return new Response($status, $message);
+    }
+    
+    /**
      * Throw error (echo JSON response)
      * @param int $status
      * @param string $message
      */
-    static function throw($status, $message, $autoMessage = true) {
-        if (empty($message) && $autoMessage) $message = self::getMessage($status);
-        $err = new Response($status, $message);
+    static function throw($status, $message = "") {
+        $err = self::get($status, $message);
         echo $err->json();
     }
 
