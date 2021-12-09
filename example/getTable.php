@@ -4,7 +4,7 @@ require_once("../src/response.php");
 require_once("../src/database.php");
 
 use simo026q\Response\Error;
-use simo026q\Database\Database;
+use simo026q\Database\MySQL;
 
 header('Access-Control-Allow-Methods: GET');
 header('Access-Control-Allow-Origin: *');
@@ -27,7 +27,7 @@ if (isset($_GET['table'])) {
     if (in_array($_GET['table'], $publicTables)) {
 
         // Create a new database object
-        $database = new Database(
+        $database = new MySQL(
             $GLOBALS["database"]["host"], 
             $GLOBALS["database"]["user"], 
             $GLOBALS["database"]["pass"], 

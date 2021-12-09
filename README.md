@@ -1,4 +1,5 @@
 # Docs
+Note: We currently ONLY support MySQL.
 
 ## Step 1
 Download the repository and add it to your project
@@ -14,7 +15,7 @@ require_once("./src/database.php");
 ### Use
 #### Required
 ```php
-use simo026q\Database\Database;
+use simo026q\Database\MySQL;
 ```
 
 #### Optional
@@ -35,8 +36,8 @@ header('Content-Type: application/json; charset=UTF-8');
 ### Getting content
 ```php
 // XAMPP Default
-$host = "localhost";
-$user = "root";
+$host =     "localhost";
+$user =     "root";
 $password = "";
 
 // Change to your database name
@@ -46,7 +47,7 @@ $dbname = "webshop";
 $table = "customers";
 
 // Create a new database object
-$database = new Database($host, $user, $password, $dbname);
+$database = new MySQL($host, $user, $password, $dbname);
 
 // Execute database query
 $response = $database->query("SELECT * FROM $table");
