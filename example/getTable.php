@@ -5,7 +5,7 @@ require_once("../src/database/database.php");
 require_once("../src/database/drivers/mysql.php");
 
 use simo026q\Response\Error;
-use simo026q\Drivers\MySQL;
+use simo026q\Database\Drivers\MySQL;
 
 header('Access-Control-Allow-Methods: GET');
 header('Access-Control-Allow-Origin: *');
@@ -44,9 +44,9 @@ if (isset($_GET['table'])) {
 
     } else {
         // Throw a 404 error
-        Error::e404("Table does not exist!");
+        Error::throw(404, "Table does not exist!");
     }
 } else {
     // Throw a 400 error
-    Error::e400("No table specified!");
+    Error::throw(400, "No table specified!");
 }

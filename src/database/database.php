@@ -2,6 +2,8 @@
 
 namespace simo026q\Database;
 
+use PDO;
+use PDOException;
 use simo026q\Response\Response;
 
 /**
@@ -31,9 +33,9 @@ abstract class Database
     {
         try {
             $dsnStr = (empty($dsn)) ? $this->dsn() : $dsn;
-            $this->connection = new \PDO($dsnStr, $this->username, $this->password);
-            $this->connection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-        } catch (\PDOException $err) {
+            $this->connection = new PDO($dsnStr, $this->username, $this->password);
+            $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        } catch (PDOException $err) {
             return $err->getMessage();
         }
     }

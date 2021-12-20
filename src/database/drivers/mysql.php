@@ -1,6 +1,6 @@
 <?php
 
-namespace simo026q\Drivers;
+namespace simo026q\Database\Drivers;
 
 use simo026q\Database\Database;
 use simo026q\Response\Response;

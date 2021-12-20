@@ -16,7 +16,7 @@ require_once("./api/database/drivers/mysql.php");
 ### Use
 #### Required
 ```php
-use simo026q\Drivers\MySQL;
+use simo026q\Database\Drivers\MySQL;
 ```
 
 #### Optional
@@ -133,12 +133,6 @@ echo $rsp->json();
 #### Throw
 ```php
 Error::throw(404, "Some error");
-```
-
-#### Throw code (e.g. e404())
-```php
-Error::e404("Custom message");
-Error::e400();
 ```
 
 #### Get message

@@ -66,22 +66,6 @@ class Error extends Response {
     }
 
     /**
-     * Throw a 404 error
-     * @param string $message Custom error message
-     */
-    static function e404($message = "") {
-        self::throw(404, $message);
-    }
-    
-    /**
-     * Throw a 400 error
-     * @param string $message Custom error message
-     */
-    static function e400($message = "") {
-        self::throw(400, $message);
-    }
-
-    /**
      * Get a error message by status code
      * @param int $status Status code
      * @return string Error message
