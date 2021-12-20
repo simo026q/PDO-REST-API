@@ -8,14 +8,15 @@ Download the repository and add it to your project
 ### Include
 Start by including the files.
 ```php
-require_once("./src/response.php");
-require_once("./src/database.php");
+require_once("./api/response.php");
+require_once("./api/database/database.php");
+require_once("./api/database/drivers/mysql.php");
 ```
 
 ### Use
 #### Required
 ```php
-use simo026q\Database\MySQL;
+use simo026q\Drivers\MySQL;
 ```
 
 #### Optional
@@ -36,15 +37,15 @@ header('Content-Type: application/json; charset=UTF-8');
 ### Getting content
 ```php
 // XAMPP Default
-$host =     "localhost";
-$user =     "root";
+$hostname = "localhost";
+$username = "root";
 $password = "";
 
 // Change to your database name
-$dbname = "webshop";
+$dbname   = "webshop";
 
 // Select table
-$table = "customers";
+$table    = "customers";
 
 // Create a new database object
 $database = new MySQL($host, $user, $password, $dbname);

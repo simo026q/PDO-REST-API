@@ -3,9 +3,14 @@
 namespace simo026q\Api;
 
 use Exception;
-use simo026q\Database\Database;
-use simo026q\Response\Response;
-use simo026q\Response\Error;
+
+// TESTING
+// DO NOT USE
+
+$params = [
+    "optional" => [],
+    "required" => ["table"]
+];
 
 /**
  * @author simo026q
@@ -13,30 +18,22 @@ use simo026q\Response\Error;
  * @license MIT License
  */
 abstract class API {
-    private $params, $rqdParams;
-    protected $database;
+    private $params;
 
     abstract function __construct();
 
-    function addParam($name, $required) {
-        if ($required) {
-            array_push($rqdParams, $name);
+    protected function validateParams()
+    {
+        if (isset($this->params["required"])) {
+            
         }
-        else {
-            array_push($params, $name);
-        }
+
+        if (isset($this->params["optional"])) return self::validateParam($this->params["optional"]);
+        return false;
     }
 
-    function getParam($name) : string {
-        if ($this->paramExist($name)) {
-            return (isset($_GET[$name])) ? $_GET[$name] : "";
-        }
-        else {
-            throw new Exception("Parameter does not exist");
-        }
-    }
-
-    function paramExist($name) : bool {
-        return in_array($name, $this->params) || in_array($name, $this->rqdParams);
+    private static function validateParam($param): bool
+    {
+        return true;
     }
 }

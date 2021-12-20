@@ -1,22 +1,21 @@
 <?php
 
 require_once("../src/response.php");
-require_once("../src/database.php");
+require_once("../src/database/database.php");
+require_once("../src/database/drivers/mysql.php");
 
 use simo026q\Response\Error;
-use simo026q\Database\MySQL;
+use simo026q\Drivers\MySQL;
 
 header('Access-Control-Allow-Methods: GET');
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json; charset=UTF-8');
 
 // Database login
-$GLOBALS["database"] = array(
-    "host" => "localhost",
-    "user" => "root",
-    "pass" => "",
-    "name" => "Nordicracing"
-);
+$hostname = "localhost";
+$username = "root";
+$password = "";
+$database = "nordicracing";
 
 // Tables allowed to be shown
 static $publicTables = array("event", "teams", "results");
@@ -28,10 +27,10 @@ if (isset($_GET['table'])) {
 
         // Create a new database object
         $database = new MySQL(
-            $GLOBALS["database"]["host"], 
-            $GLOBALS["database"]["user"], 
-            $GLOBALS["database"]["pass"], 
-            $GLOBALS["database"]["name"],
+            $hostname, 
+            $username, 
+            $password, 
+            $database
         );
 
         // Execute database query
