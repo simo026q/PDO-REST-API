@@ -2,6 +2,8 @@
 
 namespace simo026q\Database\Drivers;
 
+use PDO;
+use PDOException;
 use simo026q\Database\Database;
 use simo026q\Response\Response;
 use simo026q\Response\Error;
@@ -44,29 +46,31 @@ class MySQL extends Database
             $stmt = $this->connection->prepare($query);
             $stmt->execute();
 
-            $content = array();
+            $content = [];
 
+            // If any rows is returned
             if ($stmt->rowCount() > 0) {
 
                 // Get all column types
                 if ($convertType) {
                     foreach (range(0, $stmt->columnCount() - 1) as $column_index) {
-                        $rowMeta = $stmt->getColumnMeta($column_index);
-                        $meta[$rowMeta["name"]] = $rowMeta["native_type"];
+                        $columnMeta = $stmt->getColumnMeta($column_index);
+                        $meta[$columnMeta["name"]] = $columnMeta["native_type"];
                     }
                 }
 
+                $rsp = new Response(0, "", $meta);
+                echo $rsp->json();
+
                 // Get all data
-                while ($row = $stmt->fetch(\PDO::FETCH_ASSOC, \PDO::FETCH_ORI_NEXT)) {
+                while ($row = $stmt->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT)) {
                     $rowData = array();
                     foreach ($row as $key => $val) {
-                        if ($key != "disabled") {
-                            // Convert to the correct type ($convertType if true)
-                            if (isset($meta[$key]) && $convertType) {
-                                $rowData[$key] = self::getPdoValue($val, $meta[$key]);
-                            } else {
-                                $rowData[$key] = $val;
-                            }
+                        // Convert to the correct type ($convertType if true)
+                        if (isset($meta[$key]) && $convertType) {
+                            $rowData[$key] = self::convertType($val, $meta[$key]);
+                        } else {
+                            $rowData[$key] = $val;
                         }
                     }
                     array_push($content, $rowData);
@@ -80,7 +84,7 @@ class MySQL extends Database
             }
 
             return new Response($status, $message, $content);
-        } catch (\PDOException $err) {
+        } catch (PDOException $err) {
             error_log($err->getMessage());
             return Error::get(500);
         }
@@ -98,7 +102,7 @@ class MySQL extends Database
      * Convert the $value to the correct php type
      * @param string $type
      */
-    private static function getPdoValue($value, $type): string
+    protected static function convertType($value, $type): string
     {
         switch ($type) {
             case "LONG":

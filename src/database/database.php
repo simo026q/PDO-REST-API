@@ -13,7 +13,9 @@ use simo026q\Response\Response;
  */
 abstract class Database
 {
-    protected $host, $database, $username, $password, $connection, $port, $driver;
+    protected string $host, $database, $username, $password;
+    protected int $port, $driver;
+    protected PDO $connection;
 
     // https://www.php.net/manual/en/pdo.drivers.php
     public const PDO_CUSTOM = 0,
@@ -28,8 +30,9 @@ abstract class Database
 
     /**
      * Connect to database
+     * @return string|void Return an error message
      */
-    function connect($dsn = "")
+    function connect($dsn = ""): string
     {
         try {
             $dsnStr = (empty($dsn)) ? $this->dsn() : $dsn;
@@ -43,15 +46,15 @@ abstract class Database
     /**
      * Close connection from database
      */
-    function disconnect()
+    function disconnect(): void
     {
         $this->connection = null;
     }
 
     /**
-     * @return bool If the connection is open
+     * If the database is connected
      */
-    function isConnected()
+    function isConnected(): bool
     {
         return $this->connection != null;
     }
@@ -68,4 +71,10 @@ abstract class Database
      * @return string DSN String
      */
     abstract protected function dsn(): string;
+
+    /**
+     * Convert the $value to the correct php type
+     * @param string $type
+     */
+    abstract protected static function convertType($value, $type): string;
 }

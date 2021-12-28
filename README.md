@@ -8,13 +8,24 @@ Download the repository and add it to your project
 ### Include
 Start by including the files.
 ```php
-require_once("./api/response.php");
-require_once("./api/database/database.php");
-require_once("./api/database/drivers/mysql.php");
+// Required
+require_once("./response.php");
+require_once("./database/database.php");
+```
+
+#### Driver
+```php
+// MySQL Driver
+require_once("./database/drivers/mysql.php");
 ```
 
 ### Use
 #### Required
+```php
+use simo026q\Response\Response;
+```
+
+##### Drivers
 ```php
 use simo026q\Database\Drivers\MySQL;
 ```
@@ -22,7 +33,6 @@ use simo026q\Database\Drivers\MySQL;
 #### Optional
 ```php
 use simo026q\Response\Error;
-use simo026q\Response\Response;
 ```
 
 ### Header
@@ -113,10 +123,13 @@ array(3) {
 #### JSON
 ##### Usage
 ```php
+// JSON Content type
 header('Content-Type: application/json; charset=UTF-8');
 
+// Response
 $rsp = new Response(200, "Returned 4 rows", array( ... ));
 
+// Echo response as JSON
 echo $rsp->json();
 ```
 ##### Result
