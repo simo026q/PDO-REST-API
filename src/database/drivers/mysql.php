@@ -5,8 +5,8 @@ namespace simo026q\Database\Drivers;
 use PDO;
 use PDOException;
 use simo026q\Database\Database;
-use simo026q\Response\Response;
-use simo026q\Response\Error;
+//use simo026q\Response\Response;
+//use simo026q\Response\Error;
 
 /**
  * @author simo026q
@@ -40,9 +40,10 @@ class MySQL extends Database
      * @param bool $convertType Convert column values
      * @return Response Response object
      */
-    function query($query, $convertType = true): Response
+    /*final function queryOld($query): Response
     {
         try {
+            $convertType = true;
             $stmt = $this->connection->prepare($query);
             $stmt->execute();
 
@@ -68,7 +69,7 @@ class MySQL extends Database
                     foreach ($row as $key => $val) {
                         // Convert to the correct type ($convertType if true)
                         if (isset($meta[$key]) && $convertType) {
-                            $rowData[$key] = self::convertType($val, $meta[$key]);
+                            $rowData[$key] = self::convertDatatype($val, $meta[$key]);
                         } else {
                             $rowData[$key] = $val;
                         }
@@ -88,45 +89,13 @@ class MySQL extends Database
             error_log($err->getMessage());
             return Error::get(500);
         }
-    }
+    }*/
 
     /**
      * @return string DSN String
      */
-    protected function dsn(): string
+    final protected function dsn(): string
     {
         return "mysql:host=$this->host;port=$this->port;dbname=$this->database";
-    }
-
-    /**
-     * Convert the $value to the correct php type
-     * @param string $type
-     */
-    protected static function convertType($value, $type): string
-    {
-        switch ($type) {
-            case "LONG":
-                $returnVal = (int)$value;
-                break;
-            case "LONGLONG":
-                $returnVal = (int)$value;
-                break;
-            case "TINY":
-                $returnVal = (int)$value;
-                break;
-            case "FLOAT":
-                $returnVal = (float)$value;
-                break;
-            case "DOUBLE":
-                $returnVal = (float)$value;
-                break;
-            case "NEWDECIMAL":
-                $returnVal = (float)$value;
-                break;
-            default:
-                $returnVal = $value;
-                break;
-        }
-        return $returnVal;
     }
 }

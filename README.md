@@ -70,6 +70,12 @@ $database->disconnect();
 echo $response->json();
 ```
 
+## API
+### GET
+### POST
+### PUT
+### DELETE
+
 ## Response
 ### Constructor
 #### No parameter
